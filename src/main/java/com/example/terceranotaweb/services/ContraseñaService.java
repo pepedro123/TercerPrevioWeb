@@ -29,7 +29,7 @@ public class ContraseñaService {
             contraseña.setId(id);
             return contraseñaRepository.save(contraseña);
         }
-        return null; // Manejar la lógica de error según sea necesario
+        return null;
     }
 
     public void eliminarContraseña(Integer id) {
