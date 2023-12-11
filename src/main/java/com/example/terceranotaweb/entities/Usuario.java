@@ -1,12 +1,11 @@
 package com.example.terceranotaweb.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Setter
+@Getter
 @Table(name = "Usuario")
 @NoArgsConstructor
 @AllArgsConstructor

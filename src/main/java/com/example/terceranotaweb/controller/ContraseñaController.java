@@ -4,7 +4,6 @@ import com.example.terceranotaweb.entities.Contraseña;
 import com.example.terceranotaweb.repository.ContraseñaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -90,4 +89,4 @@ public class ContraseñaController {
 
    }
 
-}
+
