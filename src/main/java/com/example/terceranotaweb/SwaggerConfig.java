@@ -1,12 +1,17 @@
-package com.example.terceranotaweb.configuration;
+package com.example.terceranotaweb;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.VendorExtension;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
 
 @Configuration
 @EnableSwagger2
@@ -18,5 +23,18 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("paquete.controllers"))
                 .paths(PathSelectors.any())
                 .build();
+    }
+
+    private ApiInfo getApiInfo() {
+        return new ApiInfo(
+                "Encrypta Service API",
+                "Corresponde al API de los servicios de Encrypta",
+                "1.0",
+                "https://www.encrypta.com.mx/terms",
+                new Contact("Encrypta", "https://www.encrypta.com.mx", "apis@encrypta.com.mx"),
+                "LICENSE",
+                "LICENSE URL",
+                new ArrayList<VendorExtension>()
+        );
     }
 }

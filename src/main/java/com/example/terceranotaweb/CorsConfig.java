@@ -1,4 +1,4 @@
-package com.example.terceranotaweb.configuration;
+package com.example.terceranotaweb;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

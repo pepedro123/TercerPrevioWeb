@@ -1,56 +1,93 @@
 package com.example.terceranotaweb.controller;
 
 import com.example.terceranotaweb.entities.Contraseña;
-import com.example.terceranotaweb.services.ContraseñaService;
+import com.example.terceranotaweb.repository.ContraseñaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/contraseñas")
+@RequestMapping("/contraseñas")
 public class ContraseñaController {
 
     @Autowired
-    private ContraseñaService contraseñaService;
+    private ContraseñaRepository contraseñaRepository;
 
     @GetMapping
-    public List<Contraseña> listarContraseñas() {
-        return contraseñaService.listarContraseñas();
+    public List<Contraseña> getCategoriaAll() {
+
+        return contraseñaRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Contraseña> obtenerContraseñaPorId(@PathVariable Integer id) {
-        Contraseña contraseña = contraseñaService.obtenerContraseñaPorId(id);
-        if (contraseña != null) {
-            return ResponseEntity.ok(contraseña);
-        } else {
-            return ResponseEntity.notFound().build();
+    public Contraseña getCategoriasbyId(@PathVariable Integer id) {
+
+        Optional<Contraseña> categoria = contraseñaRepository.findById(id);
+
+        if (categoria.isPresent()) {
+            return categoria.get();
         }
+
+        return null;
+
     }
 
     @PostMapping
-    public ResponseEntity<Contraseña> crearContraseña(@RequestBody Contraseña contraseña) {
-        Contraseña nuevaContraseña = contraseñaService.crearContraseña(contraseña);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaContraseña);
+    public Contraseña postCategorias(@RequestBody Contraseña contraseña) {
+
+        contraseñaRepository.save(contraseña);
+
+        return contraseña;
+
+
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Contraseña> actualizarContraseña(@PathVariable Integer id, @RequestBody Contraseña contraseña) {
-        Contraseña contraseñaActualizada = contraseñaService.actualizarContraseña(id, contraseña);
-        if (contraseñaActualizada != null) {
-            return ResponseEntity.ok(contraseñaActualizada);
-        } else {
-            return ResponseEntity.notFound().build();
+    public Contraseña putCategoriasbyId(@PathVariable Integer id, @RequestBody Contraseña categoria) {
+
+        Optional<Contraseña> categoriaCurrent = contraseñaRepository.findById(id);
+
+        if (categoriaCurrent.isPresent()) {
+
+            Contraseña contraseñaReturn = categoriaCurrent.get();
+
+
+            contraseñaReturn.setContraseña(categoria.getContraseña());
+
+
+
+            contraseñaRepository.save(contraseñaReturn);
+
+            return contraseñaReturn;
         }
+
+        return null;
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarContraseña(@PathVariable Integer id) {
-        contraseñaService.eliminarContraseña(id);
-        return ResponseEntity.noContent().build();
+    public Contraseña deleteCategoriasbyId(@PathVariable Integer id) {
+
+        Optional<Contraseña> contraseña = contraseñaRepository.findById(id);
+
+        if (contraseña.isPresent()) {
+
+            Contraseña contraseñaReturn = contraseña.get();
+
+            contraseñaRepository.deleteById(id);
+
+            return contraseñaReturn;
+        }
+
+        return null;
+
     }
+
+
+   }
 
 }

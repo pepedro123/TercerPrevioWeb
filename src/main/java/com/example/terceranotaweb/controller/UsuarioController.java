@@ -1,54 +1,93 @@
 package com.example.terceranotaweb.controller;
 
 import com.example.terceranotaweb.entities.Usuario;
-import com.example.terceranotaweb.services.UsuarioService;
+import com.example.terceranotaweb.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Optional;
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/usuarios")
 public class UsuarioController {
     @Autowired
-    private UsuarioService usuarioService;
+    UsuarioRepository usuarioRepository;
+
     @GetMapping
-    public List<Usuario> listarUsuarios() {
-        return usuarioService.listarUsuarios();
+    public List<Usuario> getUsuarioAll() {
+
+        return usuarioRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Integer id) {
-        Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
-        if (usuario != null) {
-            return ResponseEntity.ok(usuario);
-        } else {
-            return ResponseEntity.notFound().build();
+    public Usuario getUsuariosbyId(@PathVariable Integer id) {
+
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+
+        if (usuario.isPresent()) {
+            return usuario.get();
         }
+
+        return null;
+
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+    public Usuario postUsuarios(@RequestBody Usuario usuario) {
+
+        usuarioRepository.save(usuario);
+
+        return usuario;
+
+
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
-        Usuario usuarioActualizado = usuarioService.actualizarUsuario(id, usuario);
-        if (usuarioActualizado != null) {
-            return ResponseEntity.ok(usuarioActualizado);
-        } else {
-            return ResponseEntity.notFound().build();
+    public Usuario putUsuariosbyId(@PathVariable Integer id, @RequestBody Usuario usuario) {
+
+        Optional<Usuario> usuarioCurrent = usuarioRepository.findById(id);
+
+        if (usuarioCurrent.isPresent()) {
+
+            Usuario usuarioReturn = usuarioCurrent.get();
+
+
+            usuarioReturn.setNombre(usuario.getNombre());
+            usuarioReturn.setApellido(usuario.getApellido());
+            usuarioReturn.setCedula(usuario.getCedula());
+            usuarioReturn.setTelefono(usuario.getTelefono());
+
+
+
+            usuarioRepository.save(usuarioReturn);
+
+            return usuarioReturn;
         }
+
+        return null;
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable Integer id) {
-        usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build();
+    public Usuario deleteUsuariosbyId(@PathVariable Integer id) {
+
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+
+        if (usuario.isPresent()) {
+
+            Usuario usuarioReturn = usuario.get();
+
+            usuarioRepository.deleteById(id);
+
+            return usuarioReturn;
+        }
+
+        return null;
+
     }
 
 }
